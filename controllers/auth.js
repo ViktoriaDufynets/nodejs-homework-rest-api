@@ -133,25 +133,6 @@ const userVerify = async (req, res) => {
   res.status(200).json({ message: `Verification successful` });
 };
 
-const userReVerify = async (req, res) => {
-  const { email } = req.body;
-  const user = User.findOne({ email });
-  if (!user) {
-    throw HttpError(401, 'Email not found');
-  }
-  if (user.verify) {
-    res.status(400).json({ message: 'Verification has already been passed' });
-  }
-  const verifyEmail = {
-    to: email,
-    subject: "verify email",
-    html: `<a target="_blank href="${BASE_URL}/users/verify/${user.verificationToken}">
-    Click on verify email</a></p>`
-  }
-  await sendEmail(verifyEmail);
-  res.status(200).json({ message: `Verification email sent` });
-};
-
 const verifyAgain = async(req, res) => {
   const { email } = req.body;
   const user = await User.findOne({ email })
